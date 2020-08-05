@@ -1,0 +1,28 @@
+public class SensorComponentController {
+    
+    @AuraEnabled
+    public static List<String> getSensorID(){
+        List<Sensor__c> sensors = new List<Sensor__c>([SELECT name FROM Sensor__c]);
+        List<String> options = new List<String>();
+        
+        for (Sensor__c s: sensors)
+            options.add(s.Name);
+        return options;
+    }
+    
+    @AuraEnabled
+    public static List<Sensor_Event__c> getEvents(String sensorid) {
+        List<Sensor_Event__c> events = [SELECT x__c, y__c, z__c, Modulus_difference_Vectors__c  
+                                        FROM Sensor_Event__c 
+                                        WHERE Sensor__r.name=:sensorid
+                                        ORDER BY CreatedDate Desc];
+        return events;
+    }
+    
+    @AuraEnabled
+    public static Double getMaxDifference(String sensorid){
+        return [SELECT Max_Vectors_Difference__c 
+                FROM Sensor__c 
+                WHERE Name =: sensorid LIMIT 1].get(0).Max_Vectors_Difference__c;
+    }
+}
