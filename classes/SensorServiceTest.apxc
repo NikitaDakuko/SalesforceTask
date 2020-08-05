@@ -1,0 +1,21 @@
+@isTest
+public class SensorServiceTest {
+    @isTest static void test() {
+               
+        String sensorid = 'TestSensor';
+		String newID = 'Test';        
+        
+        List<Integer> line = new List<Integer> {23, 45, 14, 22, 43, 196, 24, 42, 198};
+        List<Integer> invalidLine = new List<Integer> {23, 196, 24, 42, 198};
+            
+        Test.startTest();        
+        system.assertEquals( 'Inserted 3 sensor events', SensorService.createRecords(sensorid, line));
+              
+        system.assertEquals( 'List does not match [x1, y1, z1, .... xN, yN, zN] template',
+                            SensorService.createRecords(sensorid, invalidLine));
+        
+        system.assertEquals( 'Inserted 3 sensor events', SensorService.createRecords(newID, line));      
+ 		Test.stopTest();
+    }
+
+}
