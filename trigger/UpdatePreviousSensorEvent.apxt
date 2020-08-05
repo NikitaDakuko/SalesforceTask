@@ -1,0 +1,12 @@
+trigger UpdatePreviousSensorEvent on Sensor_Event__c (before insert, after insert) {
+    List<Sensor_Event__c> lastEvents = new List<Sensor_Event__c>([SELECT id, Previous_Event__c 
+                                                                  FROM Sensor_Event__c
+                                                                  WHERE Sensor__r.id =: Trigger.New.get(0).Sensor__c
+                                                                  ORDER BY createddate DESC
+                                                                  LIMIT :(Trigger.New.size()+1)]);    
+    
+    for(Integer i = lastEvents.size() - 1; i > 0; i--)
+        lastEvents.get(i - 1).Previous_Event__c = lastEvents.get(i).id;
+
+    update lastEvents;
+} 
