@@ -1,0 +1,35 @@
+@RestResource(urlMapping='/Sensor/*')
+global with sharing class SensorService{
+    
+    @HttpPOST
+    global static String createRecords(String sensorid, List<Integer> line){
+        
+        if( Math.mod(line.size(), 3) == 0 && line.size() > 0){
+            List<Sensor_Event__c> ser = new List<Sensor_Event__c>();
+            Sensor__c sensor = findSensor(sensorid);
+            
+            for(Integer i = 0; i< line.size(); i+=3){
+                Sensor_Event__c e = new Sensor_Event__c();
+                e.x__c = line.get(i);
+                e.y__c = line.get(i + 1);
+                e.z__c = line.get(i + 2);    
+                e.Sensor__c = sensor.Id;
+                ser.add(e);
+            }
+            insert ser;
+            return 'Inserted ' + ser.size() + ' sensor events' ;
+        }
+        return 'List does not match [x1, y1, z1, .... xN, yN, zN] template';
+    }
+    
+    public static Sensor__c findSensor(String sensorid){
+        for(Sensor__c s:[SELECT id
+                         FROM Sensor__c 
+                         WHERE name =:sensorid LIMIT 1])
+                return s;
+        
+        Sensor__c ns = new Sensor__c (name = sensorid);
+        insert ns;
+        return ns;
+    }
+}
