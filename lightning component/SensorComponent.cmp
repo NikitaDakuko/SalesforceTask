@@ -1,0 +1,27 @@
+<aura:component controller="SensorComponentController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="pickSensor" type="List" />
+    <aura:attribute name="SensorEventData" type="Object"/>
+    <aura:attribute name="EventColumns" type="List"/>
+    <aura:attribute name="MaxDifference" type="Double"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    
+    <lightning:select aura:id="PicklistId" label="Select Sensor Name" onchange="{!c.onControllerFieldChange}">
+        <aura:iteration items="{!v.pickSensor}" var="Name">
+            <option value="{!v.sensorid}" text="{!Name}" />  
+        </aura:iteration>
+    </lightning:select>
+    
+    <br/><br/>
+    
+    <lightning:datatable data="{! v.SensorEventData }" 
+                         columns="{! v.EventColumns }" 
+                         keyField="Id" 
+                         hideCheckboxColumn="true"/>
+    
+    <br/><br/>
+    
+    Max vector difference is: <aura:text value = "{!v.MaxDifference}"/>
+</aura:component>
